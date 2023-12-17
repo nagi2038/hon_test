@@ -11,7 +11,7 @@ def printDataOfOrder(data : dict, order : int, raw = False):
         if raw:
             for source in data[order].keys():
                 for target , count in data[order][source].items():
-                    print(source +  " -> " + target , " : ", count)
+                    print(",".join(source) +  " -> " + "".join(target) , " : ", count)
             print()
             return
         """

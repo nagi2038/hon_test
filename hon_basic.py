@@ -70,8 +70,9 @@ def GenerateAllRules(MaxOrder):
     VPrint(len([x for x in Distribution if len(x) == 1]))
     # print({x : Distribution[x] for x in Distribution if len(x) == 1})
     LoopCounter = 0
-    order = 1
+    # order = 1
     for Source in Distribution:
+        for order in range(1, MaxOrder+1):
         # if len(Source) == 1:
         #     AddToRules(Source)
         #     ExtendRule(Source, Source, 1, MaxOrder)
@@ -79,20 +80,21 @@ def GenerateAllRules(MaxOrder):
         #     if LoopCounter % 100 == 0:
         #         VPrint(LoopCounter)
         
-        AddToRules(Source)
-        ExtendRule(Source, Source, order, MaxOrder)
-        LoopCounter += 1
-        if LoopCounter % 100 == 0:
-            VPrint(LoopCounter)
-        order += 1
+            AddToRules(Source)
+            ExtendRule(Source, Source, order, MaxOrder)
+            LoopCounter += 1
+            if LoopCounter % 100 == 0:
+                VPrint(LoopCounter)
+        # order += 1
 
 def ExtendRule(Valid, Curr, order, MaxOrder):
     if order >= MaxOrder:
         AddToRules(Valid)
     else:
+        # getting distribution of source
         Distr = Distribution[Valid]
         NewOrder = order + 1
-        Extended = ExtendSource(Curr, NewOrder)
+        Extended = ExtendSource(Curr, NewOrder) # similar to SourceToExtSource.get(curr, {}).get(NewOrder)
         if len(Extended) == 0:
             AddToRules(Valid)
         else:

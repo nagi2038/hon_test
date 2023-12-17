@@ -3,7 +3,7 @@ from utils.printFormater import printDataOfOrder
 
 class BuildObservation:
 
-    def __init__(self, trajectory : int , maxOrder):
+    def __init__(self, trajectory : int , maxOrder = 1):
         """
         To build all observation for given sequncial string
 
@@ -11,13 +11,14 @@ class BuildObservation:
         trajectory : string
         maxOrder : int
 
-        Observations are stored in dict(dict(dict))
+        Observations are stored in dict(dict(dict)) in below format
+        { order : {source : {destination : count }}}
+
         ##### sample storage for Observations #####
 
         ```
-        {
-        1 : {"A" : {"B" : 2 , "C" : 2}}
-        2 : {"AB" : {"C" : 2 , "D", 1}}
+        {1 : {"A" : {"B" : 2 , "C" : 2}},
+         2 : {"AB" : {"C" : 2 , "D", 1}}
         }
         ```
 
@@ -28,7 +29,7 @@ class BuildObservation:
         self.trajectory = trajectory
         self.sizeOftrajectory = len(trajectory)
         # to avoid un necessary iterations
-        self.maxOrder = self.sizeOftrajectory-1 if (maxOrder > self.sizeOftrajectory-1 or maxOrder < 0) else maxOrder
+        self.maxOrder = maxOrder
         self.observations = defaultdict(lambda : defaultdict(lambda : defaultdict(int)))
     
     def generateSubseqance(self):
