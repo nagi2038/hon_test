@@ -14,8 +14,8 @@ class ObservationsPlus:
         ##### sample storage for Observations #####
 
         ```
-        {1 : {"A" : {"B" : 2 , "C" : 2}},
-         2 : {"AB" : {"C" : 2 , "D", 1}}
+        {1 : {"A" : {"B" : 2 , "C" : 2}, ...},
+         2 : {"AB" : {"C" : 2 , "D", 1}, ...}
         }
         
         """
@@ -24,10 +24,8 @@ class ObservationsPlus:
         self.lenOftraj = len(trajectory)
 
 
-    def buildObservations(self, order = 1):
-        if order < 1:
-            raise ValueError("Order can not be less than 1")
-        
+    def buildFirstOrderObservations(self):
+        order = 1
         paths = defaultdict(lambda : defaultdict(int))
         # paths = self.sourceObservations[order]
         for index in range(self.lenOftraj-order):
@@ -47,18 +45,32 @@ class ObservationsPlus:
             target = path[-1]
             paths[source][target] += 1
         self.sourceObservations[order] = paths
+
+    def buildObservationsOfSource(self, newSource , order):
+        ## below code is for testing
+        if len(newSource) != order:
+            raise ValueError("Order and source length does not match")
+        ###############################
+        paths = paths = defaultdict(lambda : defaultdict(int))
+        for index in range(self.lenOftraj-order):
+            path = tuple(self.trajectory[index:index+order+1])
+            source = path[:-1]
+            if source in newSource:
+                target = path[-1]
+                paths[source][target] += 1
+        self.sourceObservations[order] = paths
+
+
             
     def printObservationOfOrder(self , order , raw = False):
         printDataOfOrder( data=self.sourceObservations, order=order ,raw=raw)
 
 
 if __name__ == "__main__":
-    order = 2
-    trajectory = "helllollo"
+    trajectory = "ACDBCEACDBCE"
     x = ObservationsPlus(trajectory=trajectory)
-    x.buildObservations(order=order)
-    x.printObservationOfOrder(order=order)
-
-    x.buildObservations(1)
-    x.printObservationOfOrder(order=1)
+    x.buildFirstOrderObservations()
+    x.buildObservationsOfSource({("A", "C") , ("B", "C") }, 2)
+    x.printObservationOfOrder(1)
+    x.printObservationOfOrder(2)
     

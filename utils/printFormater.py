@@ -8,6 +8,7 @@ def printDataOfOrder(data : dict, order : int, raw = False):
         filename = basename(filepath)
 
         print("\n" +"*"*5 + f" {filename[:-3]} ORDER {order} " + "*"*5)
+        # print("\n" +"*"*5 + f" ORDER {order} " + "*"*5)
         if raw:
             for source in data[order].keys():
                 for target , count in data[order][source].items():
