@@ -11,9 +11,11 @@ class BuildDistributions:
         self.minSupport = minSupport
         self.observation = observations
         self.distribution = defaultdict(lambda : defaultdict( lambda : defaultdict(float)))
+        self.maxOrder = 0
 
     def generateDistribution(self):
         for order in self.observation.keys():
+            self.maxOrder = order
             for source in self.observation[order].keys():
                 for target , count in self.observation[order][source].items():
                     if count < self.minSupport:
@@ -30,6 +32,8 @@ class BuildDistributions:
         return self.distribution
 
     def printDistributionOfOrder(self , order , raw = False):
+        if order > self.maxOrder:
+            return
         printDataOfOrder(data=self.distribution , order=order , raw=raw)
 
     def printDistributions(self , raw = False):

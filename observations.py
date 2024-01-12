@@ -77,6 +77,8 @@ class BuildObservation:
             # print(count)
 
     def printObservationOfOrder(self , order , raw = False):
+        if order > self.maxOrder:
+            return
         printDataOfOrder( data=self.getObservations(), order=order ,raw=raw)
         
     def printObservations(self, raw = False):
