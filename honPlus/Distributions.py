@@ -8,6 +8,7 @@ class DistributionPlus:
         self.minSupport = minSupport
         self.distributions = defaultdict(lambda : defaultdict(lambda : defaultdict(int)))
         self.extednedSource = defaultdict(lambda : defaultdict(set))
+        self.order = 1
 
         """
         distributions  : {order : source : target : normalizedvalue}
@@ -40,7 +41,7 @@ class DistributionPlus:
                 temp_souce = self.observations.sourceObservations[order][source]
                 self.distributions[order][source][target] = temp_souce[target] / sum(temp_souce.values())
 
-    def buildObservationsOfSource(self, newSource , order):
+    def buildDistributionOfSource(self, newSource , order):
         """
         this function will build observatoins and distributions of specific newSource 
         """
@@ -52,7 +53,8 @@ class DistributionPlus:
             for target in self.observations.sourceObservations[order][source].keys():
                 temp_souce = self.observations.sourceObservations[order][source]
                 self.distributions[order][source][target] = temp_souce[target] / sum(temp_souce.values())
-        self.buildextendSource(newSource=newSource , order=order)
+        # self.buildextendSource(newSource=newSource , order=order)
+            # self.chekNewOrder(sources=self.distributions , currentOrder=order)
 
 
     def buildextendSource(self , newSource  , order):
@@ -60,8 +62,33 @@ class DistributionPlus:
             for start in range(1,order):
                 curr = source[start:]
                 self.extednedSource[curr][order].add(source)
+        
+    def chekNewOrder(self):
+        # filters out all source and destination value with higher order
+        newSourcedist = set()
+        for source in self.distributions[self.order]:
+            for target , distributionVal in self.distributions[self.order][source].items():
+                if distributionVal < 1:
+                    newSourcedist.add(source + (target,) )
+        return newSourcedist
 
-    
+    def getNewsource(self):
+        # get all the values with distribution less than 1
+        sourcetarget = self.chekNewOrder()
+        if sourcetarget:
+            # get all new source with previous source
+            newSource = self.observations.getNewObservationsource(sourcetarget=sourcetarget, currentOrder=self.order)
+            self.order += 1
+            # build distribution for next order.
+            if newSource:
+                self.buildDistributionOfSource(newSource=newSource, order=self.order)
+                self.printDistributionOfOrder(self.order)
+                self.getNewsource()
+            else:
+                return
+        else:
+            return
+
 
     def printDistributionOfOrder(self , order , raw = False):
         self.observations.printObservationOfOrder(order=order , raw=raw)
@@ -73,9 +100,8 @@ if __name__ == "__main__":
     observations = ObservationsPlus(trajectory=trajectory)
     dst = DistributionPlus(observations=observations, minSupport=1)
     dst.buildFirstOrderDistribution()
-    dst.buildObservationsOfSource(newSource={("A", "C") , ("B", "C") }, order= 2)
     dst.printDistributionOfOrder(order=1)
-    dst.printDistributionOfOrder(order=2)
+    dst.getNewsource()
 
     
 

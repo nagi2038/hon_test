@@ -48,10 +48,10 @@ class ObservationsPlus:
 
     def buildObservationsOfSource(self, newSource , order):
         ## below code is for testing
-        if len(newSource) != order:
-            raise ValueError("Order and source length does not match")
+        # if len(newSource) != order:
+        #     raise ValueError("Order and source length does not match")
         ###############################
-        paths = paths = defaultdict(lambda : defaultdict(int))
+        paths  = defaultdict(lambda : defaultdict(int))
         for index in range(self.lenOftraj-order):
             path = tuple(self.trajectory[index:index+order+1])
             source = path[:-1]
@@ -59,6 +59,15 @@ class ObservationsPlus:
                 target = path[-1]
                 paths[source][target] += 1
         self.sourceObservations[order] = paths
+
+    def getNewObservationsource(self, sourcetarget : set , currentOrder : int) :
+        newSource = set()
+        i = 1
+        while i < self.lenOftraj-currentOrder:
+            if tuple(self.trajectory[i:i+currentOrder+1]) in sourcetarget:
+                newSource.add(tuple(self.trajectory[i-1:i+currentOrder]))
+            i += 1
+        return newSource
 
 
             
