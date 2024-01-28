@@ -1,6 +1,6 @@
 from honPlus.Distributions import DistributionPlus
 from honPlus.Observations import ObservationsPlus
-with open(r'trajectory\trajectoryPath.txt' , 'r') as trajectories:
+with open(r'trajectory\input_ship_trajectory.csv' , 'r') as trajectories:
     data = trajectories.readline().strip("\n")
     while data:
         
