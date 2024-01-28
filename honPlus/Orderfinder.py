@@ -3,7 +3,12 @@ from honPlus.Observations import ObservationsPlus
 with open(r'trajectory\trajectoryPath.txt' , 'r') as trajectories:
     data = trajectories.readline().strip("\n")
     while data:
-        shipid , trajectory = data.split(" ")
+        
+        shipid_trajectory = data.split(" ")
+
+        # for space separated values.
+        shipId = shipid_trajectory[0:1]
+        trajectory = shipid_trajectory[1:]
         observations = ObservationsPlus(trajectory=trajectory)
         dst = DistributionPlus(observations=observations, minSupport=1)
         dst.buildFirstOrderDistribution()
