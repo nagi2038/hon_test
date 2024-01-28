@@ -1,19 +1,28 @@
 import inspect
 from os.path import basename
 
-def printDataOfOrder(data : dict, order : int, raw = False):
+file = open(r"trajectory/output.txt", "w")
 
+def printDataOfOrder(data : dict, order : int, raw = False):
+        file = open(r"trajectory/output.txt", "a")
         # to print the file name which is calling this function
         filepath = inspect.stack()[1][0].f_code.co_filename
         filename = basename(filepath)
-
-        print("\n" +"*"*5 + f" {filename[:-3]} ORDER {order} " + "*"*5)
+        
+        header = "\n" +"*"*5 + f" {filename[:-3]} ORDER {order} " + "*"*5
+        print(header)
+        file.write(header)
+        file.write("\n")
         # print("\n" +"*"*5 + f" ORDER {order} " + "*"*5)
         if raw:
             for source in data[order].keys():
                 for target , count in data[order][source].items():
-                    print(",".join(source) +  " -> " + "".join(target) , " : ", count)
+                    valST = ",".join(source) +  " -> " + "".join(target) , " : ", count
+                    file.write(valST)
+                    file.write("\n")
+                    print(valST)
             print()
+            file.write("\n")
             return
         """
         if order = 2
@@ -52,5 +61,9 @@ def printDataOfOrder(data : dict, order : int, raw = False):
                     prevsouce =  "|" + ".".join(source[:-1][::-1])
                 else:
                     prevsouce = ""
-                print(printbuildformat.format(source[-1], prevsouce, target , count))
+                val = printbuildformat.format(source[-1], prevsouce, target , count)
+                print(val)
+                file.write(val)
+                file.write("\n")
         print()
+        file.write("\n")

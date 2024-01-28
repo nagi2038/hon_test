@@ -2,6 +2,7 @@ from honPlus.Distributions import DistributionPlus
 from honPlus.Observations import ObservationsPlus
 with open(r'trajectory\input_ship_trajectory.csv' , 'r') as trajectories:
     data = trajectories.readline().strip("\n")
+    count = 0
     while data:
         
         shipid_trajectory = data.split(" ")
@@ -19,4 +20,7 @@ with open(r'trajectory\input_ship_trajectory.csv' , 'r') as trajectories:
         # removing objects to free up space in ram
         del observations
         del dst
+        count += 1
+        if count == 20:
+            break
 
