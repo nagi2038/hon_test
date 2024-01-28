@@ -11,4 +11,7 @@ with open(r'trajectory\trajectoryPath.txt' , 'r') as trajectories:
         dst.getNewsource()
         data = trajectories.readline()
         print("-"*50)
+        # removing objects to free up space in ram
+        del observations
+        del dst
 
