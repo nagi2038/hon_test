@@ -35,11 +35,22 @@ class DistributionPlus:
         self.observations.buildFirstOrderObservations()
         for source in self.observations.sourceObservations[order].keys():
             for target , count in self.observations.sourceObservations[order][source].items():
+
+                # make sure that index cache does not affect the minsupport
+                if target == "index":
+                    continue
                 if count < self.minSupport:
                     self.observations[order][source][target] = 0
             for target in self.observations.sourceObservations[order][source].keys():
+                if target == "index":
+                    continue
                 temp_souce = self.observations.sourceObservations[order][source]
-                self.distributions[order][source][target] = temp_souce[target] / sum(temp_souce.values())
+                sum_temp_source = 0
+                for targetx, count in temp_souce.items():
+                    if targetx == "index":
+                        continue
+                    sum_temp_source += count
+                self.distributions[order][source][target] = temp_souce[target] / sum_temp_source
 
     def buildDistributionOfSource(self, newSource , order):
         """
@@ -48,11 +59,20 @@ class DistributionPlus:
         self.observations.buildObservationsOfSource(newSource=newSource, order=order)
         for source in self.observations.sourceObservations[order].keys():
             for target , count in self.observations.sourceObservations[order][source].items():
+                if target == "index":
+                    continue
                 if count < self.minSupport:
                     self.observations.sourceObservations[order][source][target] = 0
             for target in self.observations.sourceObservations[order][source].keys():
+                if target == "index":
+                    continue
                 temp_souce = self.observations.sourceObservations[order][source]
-                self.distributions[order][source][target] = temp_souce[target] / sum(temp_souce.values())
+                sum_temp_source = 0
+                for target, count in temp_souce.items():
+                    if target == "index":
+                        continue
+                    sum_temp_source += count
+                self.distributions[order][source][target] = temp_souce[target] / sum_temp_source
         # self.buildextendSource(newSource=newSource , order=order)
             # self.chekNewOrder(sources=self.distributions , currentOrder=order)
 

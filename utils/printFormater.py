@@ -12,6 +12,8 @@ def printDataOfOrder(data : dict, order : int, raw = False):
         if raw:
             for source in data[order].keys():
                 for target , count in data[order][source].items():
+                    # if target == "index":
+                    #      continue
                     print(",".join(source) +  " -> " + "".join(target) , " : ", count)
             print()
             return
@@ -48,6 +50,8 @@ def printDataOfOrder(data : dict, order : int, raw = False):
         printbuildformat = "{}{} -> {} : {}"
         for source in data[order].keys():
             for target , count in data[order][source].items():
+                # if target == "index":
+                #      continue
                 if source[:-1]:
                     prevsouce =  "|" + ".".join(source[:-1][::-1])
                 else:
