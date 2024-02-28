@@ -44,6 +44,11 @@ class ObservationsPlus:
             source = path[:-1]
             target = path[-1]
             paths[source][target] += 1
+            if paths.get(source).get("index"):
+                paths[source]["index"].append(index)
+            else:
+                paths[source]["index"] = [index]
+                
         self.sourceObservations[order] = paths
 
     def buildObservationsOfSource(self, newSource , order):
