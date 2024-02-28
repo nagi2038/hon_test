@@ -12,7 +12,7 @@ class RuleBuilderPlus:
         self.distributions = distributions
     
 
-    def buildRules(self, order = 1) -> set(tuple):
+    def buildRules(self, order = 1):
         for source in self.distributions.distributions[order]:
             self.extendrule(source, source, order)
 
@@ -23,7 +23,7 @@ class RuleBuilderPlus:
         self.AddToRules()
 
 
-    def extendrule(self , orginalSource , updatedSource , order) -> set(tuple):
+    def extendrule(self , orginalSource , updatedSource , order):
         # to get original distribution
         distribution = self.distributions.distributions[order][orginalSource]
         updatedOrder = order + 1
