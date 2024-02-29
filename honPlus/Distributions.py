@@ -117,7 +117,11 @@ class DistributionPlus:
 
 if __name__ == "__main__":
     trajectory = 'ACDBCEACDBCE'
-    
+    observations = ObservationsPlus(trajectory=trajectory)
+    dst = DistributionPlus(observations=observations, minSupport=1)
+    dst.buildFirstOrderDistribution()
+    dst.printDistributionOfOrder(order=1)
+    dst.getNewsource()
 
     
 
