@@ -7,7 +7,7 @@ class DistributionPlus:
         self.observations = observations
         self.minSupport = minSupport
         self.distributions = defaultdict(lambda : defaultdict(lambda : defaultdict(int)))
-        self.extednedSource = defaultdict(lambda : defaultdict(set))
+        # self.extednedSource = defaultdict(lambda : defaultdict(set))
         self.order = 1
 
         """
@@ -24,6 +24,68 @@ class DistributionPlus:
         }
         
         """
+
+    def buildDistribution(self, newIndex = None ):
+        """
+        calculate the distribution of all orders
+        """
+
+        if self.order == 1:
+            # build first order observations
+            self.observations.buildFirstOrderObservations()
+        elif newIndex :
+            # build observations from order 2
+            self.observations.buildObservationsOfIndex(listIndexs=newIndex, order=self.order)
+
+
+        extendedIndexing = []
+        # access given order observations and generate it distributions
+        for source in self.observations.sourceObservations[self.order].keys():
+            
+            tot_visits = self.filterOutMinSupport(  source = source )
+
+            # to calcuate distribution of each target
+            for target , count in self.observations.sourceObservations[self.order][source].items():
+
+                # make sure that index cache does not affect the minsupport
+                if target == "index":
+                    continue
+                
+                self.distributions[self.order][source][target] = count / tot_visits if tot_visits else 1
+
+            
+            # since, all index are unique if we compare first and last if they are different their exits to targets
+            if self.observations.sourceObservations[self.order][source]["index"][0] != self.observations.sourceObservations[self.order][source]["index"][-1]:
+                extendedIndexing.append(self.observations.sourceObservations[self.order][source]["index"])
+        
+        # they are extendedIndexing present we call same function again with passing new Index
+        self.printDistributionOfOrder(self.order, raw=False)
+        if extendedIndexing:
+            self.order += 1
+            self.buildDistribution(newIndex=extendedIndexing)
+
+                
+
+
+
+    def filterOutMinSupport(self, source) -> int:
+
+        # calculate the "sum of visit for the source" and validate "min support"
+        tot_visits = 0
+        for target, count in self.observations.sourceObservations[self.order][source].items():
+            # make sure that index cache does not affect the minsupport
+            if target == "index":
+                continue
+            tot_visits += count
+
+            # if visits are less than min support it will be set to zero
+            if count < self.minSupport:
+                self.observations.sourceObservations[self.order][source][target] = 0
+
+        # returns sum of total vist for given source       
+        return tot_visits 
+
+
 
     def buildFirstOrderDistribution(self ):
         order  = 1
@@ -45,7 +107,7 @@ class DistributionPlus:
                 if count < self.minSupport:
                     self.observations.sourceObservations[order][source][target] = 0
             for target , count in self.observations.sourceObservations[order][source].items():
-                if target == "index" or count == 0:
+                if target == "index":
                     continue
                 temp_souce = self.observations.sourceObservations[order][source]
                 sum_temp_source = 0
@@ -53,7 +115,13 @@ class DistributionPlus:
                     if targetx == "index":
                         continue
                     sum_temp_source += count
-                self.distributions[order][source][target] = temp_souce[target] / sum_temp_source if sum_temp_source else 0
+                self.distributions[order][source][target] = temp_souce[target] / sum_temp_source if sum_temp_source else 1.0
+    
+    
+
+
+
+
 
     def buildDistributionOfSource(self, newSource , order):
         """
@@ -67,7 +135,7 @@ class DistributionPlus:
                 if count < self.minSupport :
                     self.observations.sourceObservations[order][source][target] = 0
             for target, count in self.observations.sourceObservations[order][source].items():
-                if target == "index" or count == 0:
+                if target == "index":
                     continue
                 temp_souce = self.observations.sourceObservations[order][source]
                 sum_temp_source = 0
@@ -80,11 +148,11 @@ class DistributionPlus:
             # self.chekNewOrder(sources=self.distributions , currentOrder=order)
 
 
-    def buildextendSource(self , newSource  , order):
-        for source in newSource:
-            for start in range(1,order):
-                curr = source[start:]
-                self.extednedSource[curr][order].add(source)
+    # def buildextendSource(self , newSource  , order):
+    #     for source in newSource:
+    #         for start in range(1,order):
+    #             curr = source[start:]
+    #             self.extednedSource[curr][order].add(source)
         
     def chekNewOrder(self):
         # filters out all source and destination value with higher order

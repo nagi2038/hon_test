@@ -1,5 +1,7 @@
+from time import time
 from honPlus.Distributions import DistributionPlus
 from honPlus.Observations import ObservationsPlus
+start = time()
 with open(r'trajectory\sample_data50.csv' , 'r') as trajectories:
     data = trajectories.readline().strip("\n")
     count = 0
@@ -11,17 +13,20 @@ with open(r'trajectory\sample_data50.csv' , 'r') as trajectories:
         trajectory = shipid_trajectory[1:]
         observations = ObservationsPlus(trajectory=trajectory)
         dst = DistributionPlus(observations=observations, minSupport=1)
-        dst.buildFirstOrderDistribution()
-        dst.printDistributionOfOrder(order=1)
-        dst.getNewsource()
+        dst.buildDistribution()
+        # dst.buildFirstOrderDistribution()
+        # dst.printDistributionOfOrder(order=1)
+        # dst.getNewsource()
         data = trajectories.readline()
         print("-"*50)
         # removing objects to free up space in ram
         del observations
         del dst
-        count += 1
-        if count%20 == 0:
-            break
+        # count += 1
+        # if count%20 == 0:
+        #     break
+end = time()
+print( "total time " , end - start)
 
 # BUG
 # ***** Observations ORDER 3 *****

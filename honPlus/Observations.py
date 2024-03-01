@@ -57,7 +57,23 @@ class ObservationsPlus:
                 
         self.sourceObservations[order] = paths
 
-    
+    def buildObservationsOfIndex(self, listIndexs : list[list] , order : int):
+        paths  = defaultdict(lambda : defaultdict(int))
+        for indexs in listIndexs:
+            for index in indexs:
+                # checking index are going out of bound
+                if index-order + 1 >= 0 and index+1 < self.lenOftraj:
+                    path = tuple(self.trajectory[index-order + 1 : index + 1])
+                    source = path[:-1]
+                    paths[source][path[-1]] += 1
+
+                    if paths.get(source).get("index"):
+                        paths[source]["index"].append(index)
+                    else:
+                        # creating index key if not present for the source
+                        paths[source]["index"] = [index]
+        self.sourceObservations[order] = paths
+
 
     def buildObservationsOfSource(self, newSource , order):
         ## below code is for testing
