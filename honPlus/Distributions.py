@@ -32,7 +32,10 @@ class DistributionPlus:
         it will generate the observations
         
         """
+        # build first order observations
         self.observations.buildFirstOrderObservations()
+
+        # access {order val} order observations and generate it distributions
         for source in self.observations.sourceObservations[order].keys():
             for target , count in self.observations.sourceObservations[order][source].items():
 
@@ -40,9 +43,9 @@ class DistributionPlus:
                 if target == "index":
                     continue
                 if count < self.minSupport:
-                    self.observations[order][source][target] = 0
-            for target in self.observations.sourceObservations[order][source].keys():
-                if target == "index":
+                    self.observations.sourceObservations[order][source][target] = 0
+            for target , count in self.observations.sourceObservations[order][source].items():
+                if target == "index" or count == 0:
                     continue
                 temp_souce = self.observations.sourceObservations[order][source]
                 sum_temp_source = 0
@@ -50,7 +53,7 @@ class DistributionPlus:
                     if targetx == "index":
                         continue
                     sum_temp_source += count
-                self.distributions[order][source][target] = temp_souce[target] / sum_temp_source
+                self.distributions[order][source][target] = temp_souce[target] / sum_temp_source if sum_temp_source else 0
 
     def buildDistributionOfSource(self, newSource , order):
         """
@@ -61,10 +64,10 @@ class DistributionPlus:
             for target , count in self.observations.sourceObservations[order][source].items():
                 if target == "index":
                     continue
-                if count < self.minSupport:
+                if count < self.minSupport :
                     self.observations.sourceObservations[order][source][target] = 0
-            for target in self.observations.sourceObservations[order][source].keys():
-                if target == "index":
+            for target, count in self.observations.sourceObservations[order][source].items():
+                if target == "index" or count == 0:
                     continue
                 temp_souce = self.observations.sourceObservations[order][source]
                 sum_temp_source = 0
@@ -72,7 +75,7 @@ class DistributionPlus:
                     if target == "index":
                         continue
                     sum_temp_source += count
-                self.distributions[order][source][target] = temp_souce[target] / sum_temp_source
+                self.distributions[order][source][target] = temp_souce[target] / sum_temp_source if sum_temp_source else 1.0
         # self.buildextendSource(newSource=newSource , order=order)
             # self.chekNewOrder(sources=self.distributions , currentOrder=order)
 

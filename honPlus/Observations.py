@@ -25,12 +25,10 @@ class ObservationsPlus:
 
 
     def buildFirstOrderObservations(self):
-        order = 1
-        paths = defaultdict(lambda : defaultdict(int))
-        # paths = self.sourceObservations[order]
-        for index in range(self.lenOftraj-order):
-            """
-            if length = 10 
+        """
+            Build first order observations
+
+            if length of trajectory = 10 
             order = 1
             range : 10-1 = 9
             total iterations [0,8] which is 9
@@ -39,17 +37,27 @@ class ObservationsPlus:
             range 10-2 = 8
             total iterations [0,7] which is 8
             
-            """
+        """
+        order = 1
+        paths = defaultdict(lambda : defaultdict(int))
+        # paths = self.sourceObservations[order]
+        for index in range(self.lenOftraj-order):
             path = tuple(self.trajectory[index:index+order+1])
             source = path[:-1]
             target = path[-1]
             paths[source][target] += 1
+
+            # index of source start point is added 
+            # appending index key if present
             if paths.get(source).get("index"):
                 paths[source]["index"].append(index)
             else:
+                # creating index key if not present for the source
                 paths[source]["index"] = [index]
                 
         self.sourceObservations[order] = paths
+
+    
 
     def buildObservationsOfSource(self, newSource , order):
         ## below code is for testing
