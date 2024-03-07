@@ -18,7 +18,7 @@ with open(r'trajectory\sample_data50.csv' , 'r') as trajectories:
         # dst.printDistributionOfOrder(order=1)
         # dst.getNewsource()
         data = trajectories.readline()
-        print("-"*50)
+        # print("-"*50)
         # removing objects to free up space in ram
         del observations
         del dst

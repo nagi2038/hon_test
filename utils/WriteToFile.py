@@ -5,7 +5,7 @@ def writeToFile(filePath, data , raw = True) :
         printbuildformat = "{}{} -> {} : {}"
         if raw:
             for order in data.keys():
-                print(order)
+                # print(order)
                 orderHeader = "*"*5 + f" {filePath[:-3]} ORDER {order} " + "*"*5
                 file.write(orderHeader+"\n")
                 for source in data[order].keys():
@@ -14,7 +14,7 @@ def writeToFile(filePath, data , raw = True) :
                         file.write(vals)
         else:
             for order in data.keys():
-                print(order)
+                # print(order)
                 orderHeader =  "*"*5 + f" {filePath[:-3]} ORDER {order} " + "*"*5
                 file.write(orderHeader+"\n")
                 for source in data[order].keys():
