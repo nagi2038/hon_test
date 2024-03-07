@@ -26,8 +26,10 @@ with open(r'trajectory\sample_data50.csv' , 'r') as trajectories:
         # if count%20 == 0:
         #     break
 ObservationsPlus.getConsolidatedObj().buildDistribution()
-ObservationsPlus.getConsolidatedObj().printOverAllObservations()
-ObservationsPlus.getConsolidatedObj().printDistributions()
+# ObservationsPlus.getConsolidatedObj().printOverAllObservations()
+# ObservationsPlus.getConsolidatedObj().printDistributions()
+ObservationsPlus.getConsolidatedObj().writeOverAllObservations()
+ObservationsPlus.getConsolidatedObj().writeDistributions()
 end = time()
 print( "total time " , end - start)
 

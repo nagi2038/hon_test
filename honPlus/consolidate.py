@@ -1,5 +1,6 @@
 from collections import defaultdict
-from utils.printFormater import printDataOfOrder
+from utils.printFormater import printDataOfOrder 
+from utils.WriteToFile import writeToFile
 
 class Consolidate:
 
@@ -18,6 +19,15 @@ class Consolidate:
         for order in Consolidate.OverAllDistributinos:
             printDataOfOrder(data= Consolidate.OverAllDistributinos , order=order , raw=raw)
 
+    
+    @staticmethod
+    def writeOverAllObservations(raw = True):
+        writeToFile( filePath= "Observation.txt", data= Consolidate.OverAllObservations  , raw=raw)
+
+    @staticmethod
+    def writeDistributions( raw = True):
+        writeToFile(filePath= "Distribution.txt", data= Consolidate.OverAllDistributinos ,  raw=raw)
+
         
     @staticmethod
     def buildDistribution():
@@ -25,7 +35,7 @@ class Consolidate:
                 for source in sources:
                     tot_visits = Consolidate.filterOutMinSupport(order=order , source=source)
                     for target , count in Consolidate.OverAllObservations[order][source].items():
-                        Consolidate.OverAllDistributinos[order][source][target] =  count/tot_visits if tot_visits else 1
+                        Consolidate.OverAllDistributinos[order][source][target] =  round(count/tot_visits,5) if tot_visits else 1
 
 
     @staticmethod
