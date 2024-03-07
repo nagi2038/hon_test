@@ -1,8 +1,10 @@
 from collections import defaultdict
 from utils.printFormater import printDataOfOrder
-
+from consolidate import Consolidate
 class ObservationsPlus:
-    def __init__(self, trajectory : str|tuple|list) -> None:
+    consolidate = Consolidate()
+
+    def __init__(self, trajectory : str|tuple|list  ) -> None:
 
         """
         trajectory may be list , str , tuple
@@ -47,6 +49,8 @@ class ObservationsPlus:
             target = path[-1]
             paths[source][target] += 1
 
+            ObservationsPlus.consolidate.OverAllObservations[order][source][target] += 1
+
             # index of source start point is added 
             # appending index key if present
             if paths.get(source).get("index"):
@@ -65,7 +69,10 @@ class ObservationsPlus:
                 if index-order + 1 >= 0 and index+1 < self.lenOftraj:
                     path = tuple(self.trajectory[index-order + 1 : index + 1])
                     source = path[:-1]
-                    paths[source][path[-1]] += 1
+                    target = path[-1]
+                    paths[source][target] += 1
+
+                    ObservationsPlus.consolidate.OverAllObservations[order][source][target] += 1
 
                     if paths.get(source).get("index"):
                         paths[source]["index"].append(index)
@@ -103,6 +110,10 @@ class ObservationsPlus:
     def printObservationOfOrder(self , order , raw = False):
         printDataOfOrder( data=self.sourceObservations, order=order ,raw=raw)
 
+    @staticmethod
+    def getConsolidatedObj() -> Consolidate:
+        return ObservationsPlus.consolidate
+
 
 if __name__ == "__main__":
     trajectory = "ACDBCEACDBCE"
@@ -111,4 +122,16 @@ if __name__ == "__main__":
     x.buildObservationsOfSource({("A", "C") , ("B", "C") }, 2)
     x.printObservationOfOrder(1)
     x.printObservationOfOrder(2)
+
+    del x
+    ObservationsPlus.consolidate.printOverAllObservations()
+
+    y = ObservationsPlus(trajectory=trajectory)
+    y.buildFirstOrderObservations()
+    y.buildObservationsOfSource({("A", "C") , ("B", "C") }, 2)
+    y.printObservationOfOrder(1)
+    y.printObservationOfOrder(2)
+
+    del y 
+    ObservationsPlus.consolidate.printOverAllObservations()
     

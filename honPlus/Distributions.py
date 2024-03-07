@@ -29,7 +29,7 @@ class DistributionPlus:
         """
         calculate the distribution of all orders
         """
-
+        
         if self.order == 1:
             # build first order observations
             self.observations.buildFirstOrderObservations()
@@ -41,17 +41,22 @@ class DistributionPlus:
         extendedIndexing = []
         # access given order observations and generate it distributions
         for source in self.observations.sourceObservations[self.order].keys():
+
+
+            ###################################################################################
             
-            tot_visits = self.filterOutMinSupport(  source = source )
+            # tot_visits = self.filterOutMinSupport(  source = source )
 
-            # to calcuate distribution of each target
-            for target , count in self.observations.sourceObservations[self.order][source].items():
+            # # to calcuate distribution of each target
+            # for target , count in self.observations.sourceObservations[self.order][source].items():
 
-                # make sure that index cache does not affect the minsupport
-                if target == "index":
-                    continue
+            #     # make sure that index cache does not affect the minsupport
+            #     if target == "index":
+            #         continue
                 
-                self.distributions[self.order][source][target] = count / tot_visits if tot_visits else 1
+            #     self.distributions[self.order][source][target] = count / tot_visits if tot_visits else 1
+
+            #################################################################################################
 
             
             # since, all index are unique if we compare first and last if they are different their exits to targets
@@ -59,7 +64,8 @@ class DistributionPlus:
                 extendedIndexing.append(self.observations.sourceObservations[self.order][source]["index"])
         
         # they are extendedIndexing present we call same function again with passing new Index
-        self.printDistributionOfOrder(self.order, raw=False)
+                
+        # self.printDistributionOfOrder(self.order, raw=False)
         if extendedIndexing:
             self.order += 1
             self.buildDistribution(newIndex=extendedIndexing)
@@ -183,7 +189,7 @@ class DistributionPlus:
 
     def printDistributionOfOrder(self , order , raw = False):
         self.observations.printObservationOfOrder(order=order , raw=raw)
-        printDataOfOrder(data=self.distributions , order=order , raw=raw)
+        # printDataOfOrder(data=self.distributions , order=order , raw=raw)
     
 
 if __name__ == "__main__":
