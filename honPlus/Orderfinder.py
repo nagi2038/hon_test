@@ -1,5 +1,4 @@
 from time import time
-from honPlus.Distributions import DistributionPlus
 from honPlus.Observations import ObservationsPlus
 start = time()
 with open(r'trajectory/sample_data50.csv' , 'r') as trajectories:
@@ -12,13 +11,11 @@ with open(r'trajectory/sample_data50.csv' , 'r') as trajectories:
         shipId = shipid_trajectory[0:1]
         trajectory = shipid_trajectory[1:]
         observations = ObservationsPlus(trajectory=trajectory)
-        dst = DistributionPlus(observations=observations, minSupport=1)
-        dst.buildDistribution()
+        observations.extendObservations()
         
         data = trajectories.readline().strip("\n").strip()
             # removing objects to free up space in ram
         del observations
-        del dst
         
         
 ObservationsPlus.getConsolidatedObj().buildDistribution()

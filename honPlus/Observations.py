@@ -24,6 +24,7 @@ class ObservationsPlus:
         self.trajectory = trajectory
         self.sourceObservations = defaultdict(lambda : defaultdict(lambda : defaultdict(int)))
         self.lenOftraj = len(trajectory)
+        self.order = 1
 
 
     def buildFirstOrderObservations(self):
@@ -61,55 +62,50 @@ class ObservationsPlus:
                 
         self.sourceObservations[order] = paths
 
-    def buildObservationsOfIndex(self, listIndexs : list[list] , order : int):
+    def buildObservationsOfIndex(self, listIndexs : list[list]  ):
         paths  = defaultdict(lambda : defaultdict(int))
         for indexs in listIndexs:
             for index in indexs:
                 # checking index are going out of bound
-                if index-order + 1 >= 0 and index+1 < self.lenOftraj:
-                    # path = tuple(self.trajectory[index-order + 1 : index + 2])
-                    # source = path[:-1]
-                    # target = path[-1]
-                    source=tuple(self.trajectory[index-order + 1 : index + 1])
+                if index-self.order + 1 >= 0 and index+1 < self.lenOftraj:
+                    source=tuple(self.trajectory[index-self.order + 1 : index + 1])
                     target=self.trajectory[index + 1]
                     paths[source][target] += 1
 
-                    ObservationsPlus.consolidate.OverAllObservations[order][source][target] += 1
+                    ObservationsPlus.consolidate.OverAllObservations[self.order][source][target] += 1
 
                     if paths.get(source).get("index"):
                         paths[source]["index"].append(index)
                     else:
                         # creating index key if not present for the source
                         paths[source]["index"] = [index]
-        self.sourceObservations[order] = paths
+        self.sourceObservations[self.order] = paths
 
 
-    # def buildObservationsOfSource(self, newSource , order):
-    #     ## below code is for testing
-    #     # if len(newSource) != order:
-    #     #     raise ValueError("Order and source length does not match")
-    #     ###############################
-    #     paths  = defaultdict(lambda : defaultdict(int))
-    #     for index in range(self.lenOftraj-order):
-    #         path = tuple(self.trajectory[index:index+order+1])
-    #         source = path[:-1]
-    #         if source in newSource:
-    #             target = path[-1]
-    #             paths[source][target] += 1
-    #     self.sourceObservations[order] = paths
-
-    # def getNewObservationsource(self, sourcetarget : set , currentOrder : int) :
-    #     newSource = set()
-    #     i = 1
-    #     while i < self.lenOftraj-currentOrder:
-    #         if tuple(self.trajectory[i:i+currentOrder+1]) in sourcetarget:
-    #             newSource.add(tuple(self.trajectory[i-1:i+currentOrder]))
-    #         i += 1
-    #     return newSource
-
+    def extendObservations(self, newIndex = None ):
+        """
+        calculate the distribution of all orders
+        """
+        if self.order == 1:
+            # build first order observations
+            self.buildFirstOrderObservations()
+        elif newIndex :
+            # build observations from order 2
+            self.buildObservationsOfIndex(listIndexs=newIndex)
+        extendedIndexing = []
+        # access given order observations and generate it distributions
+        for source in self.sourceObservations[self.order].keys():
             
-    # def printObservationOfOrder(self , order , raw = False):
-    #     printDataOfOrder( data=self.sourceObservations, order=order ,raw=raw)
+            # since, all index are unique if we compare first and last if they are different their exits to targets
+            if self.sourceObservations[self.order][source]["index"][0] != self.sourceObservations[self.order][source]["index"][-1]:
+                extendedIndexing.append(self.sourceObservations[self.order][source]["index"])
+        
+        # they are extendedIndexing present we call same function again with passing new Index
+                
+        # self.printDistributionOfOrder(self.order, raw=False)
+        if extendedIndexing:
+            self.order += 1
+            self.extendObservations(newIndex=extendedIndexing)
 
     @staticmethod
     def getConsolidatedObj() -> Consolidate:
@@ -119,20 +115,5 @@ class ObservationsPlus:
 if __name__ == "__main__":
     trajectory = "ACDBCEACDBCE"
     x = ObservationsPlus(trajectory=trajectory)
-    x.buildFirstOrderObservations()
-    x.buildObservationsOfSource({("A", "C") , ("B", "C") }, 2)
-    x.printObservationOfOrder(1)
-    x.printObservationOfOrder(2)
-
-    del x
-    ObservationsPlus.consolidate.printOverAllObservations()
-
-    y = ObservationsPlus(trajectory=trajectory)
-    y.buildFirstOrderObservations()
-    y.buildObservationsOfSource({("A", "C") , ("B", "C") }, 2)
-    y.printObservationOfOrder(1)
-    y.printObservationOfOrder(2)
-
-    del y 
-    ObservationsPlus.consolidate.printOverAllObservations()
+    x.extendObservations()
     
