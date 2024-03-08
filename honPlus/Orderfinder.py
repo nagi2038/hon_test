@@ -2,9 +2,9 @@ from time import time
 from honPlus.Distributions import DistributionPlus
 from honPlus.Observations import ObservationsPlus
 start = time()
-with open(r'C:\Users\kamal\hon_test\trajectory\input_ship_trajectory.csv' , 'r') as trajectories:
-    data = trajectories.readline().strip("\n")
-    count = 0
+with open(r'trajectory/sample_data50.csv' , 'r') as trajectories:
+    data = trajectories.readline().strip("\n").strip()
+   
     while data:
         shipid_trajectory = data.split(" ")
 
@@ -14,38 +14,19 @@ with open(r'C:\Users\kamal\hon_test\trajectory\input_ship_trajectory.csv' , 'r')
         observations = ObservationsPlus(trajectory=trajectory)
         dst = DistributionPlus(observations=observations, minSupport=1)
         dst.buildDistribution()
-        # dst.buildFirstOrderDistribution()
-        # dst.printDistributionOfOrder(order=1)
-        # dst.getNewsource()
-        data = trajectories.readline()
-        # print("-"*50)
-        # removing objects to free up space in ram
+        
+        data = trajectories.readline().strip("\n").strip()
+            # removing objects to free up space in ram
         del observations
         del dst
-        # count += 1
-        # if count%20 == 0:
-        #     break
+        
+        
 ObservationsPlus.getConsolidatedObj().buildDistribution()
 # ObservationsPlus.getConsolidatedObj().printOverAllObservations()
 # ObservationsPlus.getConsolidatedObj().printDistributions()
 ObservationsPlus.getConsolidatedObj().writeOverAllObservations()
 ObservationsPlus.getConsolidatedObj().writeDistributions()
 end = time()
-print( "total time " , end - start)
-
-# BUG
-# ***** Observations ORDER 3 *****
-# 10|19.29 -> 20 : 0
-# 10|19.29 -> 19 : 0
-# 41|31.30 -> 31 : 2
-# 41|31.30 -> 42 : 0
-# 30|31.21 -> 31 : 0
-# 30|31.21 -> 39 : 0
-# 19|29.39 -> 29 : 0
+print( "total time in minutes " , round((end - start)/60,2))
 
 
-# ***** Distributions ORDER 3 *****
-# 10|19.29 -> 19 : 1.0
-# 41|31.30 -> 42 : 0.0
-# 30|31.21 -> 39 : 1.0
-# 19|29.39 -> 29 : 1.0

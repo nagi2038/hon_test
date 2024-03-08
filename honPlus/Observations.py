@@ -67,9 +67,11 @@ class ObservationsPlus:
             for index in indexs:
                 # checking index are going out of bound
                 if index-order + 1 >= 0 and index+1 < self.lenOftraj:
-                    path = tuple(self.trajectory[index-order + 1 : index + 1])
-                    source = path[:-1]
-                    target = path[-1]
+                    # path = tuple(self.trajectory[index-order + 1 : index + 2])
+                    # source = path[:-1]
+                    # target = path[-1]
+                    source=tuple(self.trajectory[index-order + 1 : index + 1])
+                    target=self.trajectory[index + 1]
                     paths[source][target] += 1
 
                     ObservationsPlus.consolidate.OverAllObservations[order][source][target] += 1
@@ -82,33 +84,32 @@ class ObservationsPlus:
         self.sourceObservations[order] = paths
 
 
-    def buildObservationsOfSource(self, newSource , order):
-        ## below code is for testing
-        # if len(newSource) != order:
-        #     raise ValueError("Order and source length does not match")
-        ###############################
-        paths  = defaultdict(lambda : defaultdict(int))
-        for index in range(self.lenOftraj-order):
-            path = tuple(self.trajectory[index:index+order+1])
-            source = path[:-1]
-            if source in newSource:
-                target = path[-1]
-                paths[source][target] += 1
-        self.sourceObservations[order] = paths
+    # def buildObservationsOfSource(self, newSource , order):
+    #     ## below code is for testing
+    #     # if len(newSource) != order:
+    #     #     raise ValueError("Order and source length does not match")
+    #     ###############################
+    #     paths  = defaultdict(lambda : defaultdict(int))
+    #     for index in range(self.lenOftraj-order):
+    #         path = tuple(self.trajectory[index:index+order+1])
+    #         source = path[:-1]
+    #         if source in newSource:
+    #             target = path[-1]
+    #             paths[source][target] += 1
+    #     self.sourceObservations[order] = paths
 
-    def getNewObservationsource(self, sourcetarget : set , currentOrder : int) :
-        newSource = set()
-        i = 1
-        while i < self.lenOftraj-currentOrder:
-            if tuple(self.trajectory[i:i+currentOrder+1]) in sourcetarget:
-                newSource.add(tuple(self.trajectory[i-1:i+currentOrder]))
-            i += 1
-        return newSource
-
+    # def getNewObservationsource(self, sourcetarget : set , currentOrder : int) :
+    #     newSource = set()
+    #     i = 1
+    #     while i < self.lenOftraj-currentOrder:
+    #         if tuple(self.trajectory[i:i+currentOrder+1]) in sourcetarget:
+    #             newSource.add(tuple(self.trajectory[i-1:i+currentOrder]))
+    #         i += 1
+    #     return newSource
 
             
-    def printObservationOfOrder(self , order , raw = False):
-        printDataOfOrder( data=self.sourceObservations, order=order ,raw=raw)
+    # def printObservationOfOrder(self , order , raw = False):
+    #     printDataOfOrder( data=self.sourceObservations, order=order ,raw=raw)
 
     @staticmethod
     def getConsolidatedObj() -> Consolidate:
