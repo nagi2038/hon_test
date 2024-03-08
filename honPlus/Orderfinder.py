@@ -2,7 +2,7 @@ from time import time
 from honPlus.Distributions import DistributionPlus
 from honPlus.Observations import ObservationsPlus
 start = time()
-with open(r'trajectory\sample_data50.csv' , 'r') as trajectories:
+with open(r'C:\Users\kamal\hon_test\trajectory\input_ship_trajectory.csv' , 'r') as trajectories:
     data = trajectories.readline().strip("\n")
     count = 0
     while data:
