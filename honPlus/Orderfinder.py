@@ -1,11 +1,11 @@
 from time import time
 from honPlus.Observations import ObservationsPlus
 start = time()
-with open(r'trajectory/sample_data50.csv' , 'r') as trajectories:
+with open(r'trajectory/click.csv' , 'r') as trajectories:
     data = trajectories.readline().strip("\n").strip()
    
     while data:
-        shipid_trajectory = data.split(" ")
+        shipid_trajectory = data.split(",")
 
         # for space separated values.
         shipId = shipid_trajectory[0:1]
